@@ -1,6 +1,8 @@
 name: Pushing Images to ECR
 
-on: production
+on:
+  push:
+    branches: production
 
 jobs:
   build-push:
