@@ -8,250 +8,146 @@ const cache = require('memory-cache');
 const bodyParser = require('body-parser');
 const cors = require('cors');
 const axios = require('axios');
-
 const Souls  =  require('./model')
-
-
-
+const moment =  require('moment')
 // UssdMenu.
 
+let menu = new UssdMenu({ provider: 'arkesel' });
+// Define Session Config & States normally
+let session = {};
+menu.sessionConfig({
+    start: (sessionId, callback) =>{
+        // initialize current session if it doesn't exist
+        // this is called by menu.run()
+        if(!(sessionId in session)) session[sessionId] = {};
+        callback();
+    },
+    end: (sessionId, callback) =>{
+        // clear current session
+        // this is called by menu.end()
+        delete session[sessionId];
+        callback();
+    },
+    set: (sessionId, key, value, callback) => {
+        // store key-value pair in current session
+        session[sessionId][key] = value;
+        callback();
+    },
+    get: (sessionId, key, callback) =>{
+        // retrieve value by key in current session
+        let value = session[sessionId][key];
+        callback(null, value);
+    }
+});
 
 
-app.post('/ussd', (  async(req, res) => {
+
+menu.startState({
+    run: () => {
+        // use menu.con() to send response without terminating session      
+        menu.con('Welcome to Global Crusade Soul Registration App'  +
+        '\n Enter the  Name of the Soul');
+    },
+   // next object links to next state based on user input
+    next: {
+        '*[a-zA-Z]+': 'gender',
     
-   const phoneNumber = /^[(]{0,1}[0-9]{3}[)]{0,1}[-\s\.]{0,1}[0-9]{3}[-\s\.]{0,1}[0-9]{4}$/
-   
+   }
+    
+});
 
-    console.log("somethinghe ha shakssks");
-    const {
-        sessionID,
-        userID,
-        newSession,
-        msisdn,
-        userData,
-        network,
-    } = req.body;
 
-    if (newSession) {
-        const message = "Welcome, Enter the name of the Soul to continue with registration" ;
-           
-        const continueSession = true;
-
-        // Keep track of the USSD state of the user and their session
-        const currentState = {
-            sessionID,
-            msisdn,
-            userData,
-            network,
-            newSession,
-            message,
-            level: 1,
-            page: 1,
-        };
-
-        let userResponseTracker = cache.get(sessionID);
-
-        !userResponseTracker
-            ? userResponseTracker = [{ ...currentState }]
-            : userResponseTracker.push({ ...currentState });
-
-        cache.put(sessionID, userResponseTracker);
-
-        res.setHeader('Content-Type', 'application/json');
-        return res.status(200).json({
-            userID,
-            sessionID,
-            message,
-            continueSession,
-            msisdn
-        });
+menu.state('gender', {
+    run: function(){
+        let name = menu.val;
+       menu.session.set('name', name);
+        menu.con('Choosethe Gender of the Soul' +
+        '\n1. Male' +
+        '\n2. Female' 
+        );
+    },
+    next: {
+        '1': 'gender.contact',
+        '2': 'gender.contact'
     }
+});
 
-    const userResponseTracker = cache.get(sessionID);
 
-    if (!userResponseTracker) {
-        res.setHeader('Content-Type', 'application/json');
-        return res.status(200).json({
-            userID,
-            sessionID,
-            message: 'Error! Please dial code again!',
-            continueSession: false,
-            msisdn
-        });
-    }
-
-    const lastResponse = userResponseTracker[userResponseTracker.length - 1];
-
-    let message = "Bad Option";
-    let continueSession = false;
-
-    if (lastResponse.level === 1) {
-         
-        // let myName =  userData
-        // dataToSave.name  = myName
-       
-
-        if(userData ==null ||  phoneNumber.test(userData)== true){
-            message = "Sorry Enter a correct Name!, Name can't be a number or Empty";
-
-            continueSession = true;
-
-            const currentState = {
-                sessionID,
-                userID,
-                level: 1,
-                msisdn,
-                message,
-                userData,
-                network,
-                newSession,
-                page: 1,
-            };
-
-            userResponseTracker.push({ ...currentState });
-            cache.put(sessionID, userResponseTracker);
+menu.state('gender.contact', {
+    run: function(){
+        let gender = menu.val;
+        if(gender =='1'){
+        menu.session.set('gender', "Male");
         }
-         else {
-            message = "Enter the gender of the Soul";
-
-            continueSession = true;
-
-            const currentState = {
-                sessionID,
-                userID,
-                level: 2,
-                msisdn,
-                message,
-                userData,
-                network,
-                newSession,
-                page: 1,
-            };
-
-            userResponseTracker.push({ ...currentState });
-            cache.put(sessionID, userResponseTracker);
+        else{
+            menu.session.set('gender', 'Female');
         }
-       
 
-    } else if (lastResponse.level === 2) {
-            
-        // let mygender =  userData
-        // dataToSave.gender  = mygender
-            message = "Enter the contact of the person";
-
-            continueSession = true;
-
-            const currentState = {
-                sessionID,
-                userID,
-                level: 3,
-                msisdn,
-                message,
-                userData,
-                network,
-                newSession,
-                page: 2
-            };
-
-            userResponseTracker.push({ ...currentState });
-            cache.put(sessionID, userResponseTracker);
-
-       
+        menu.con('Enter the  contact of the Soul');
+    },
+    next: {
+        '*[(]{0,1}[0-9]{3}[)]{0,1}[-\s\.]{0,1}[0-9]{3}[-\s\.]{0,1}[0-9]{4}': 'contact.town'
     }
-    else if (lastResponse.level === 3) {
+});
 
-        // let mycontact =  userData
-        // dataToSave.gender  = mycontact
 
-        if( phoneNumber.test(userData) == false)    {
-            message = "Please enter a correct phone Number";
-
-            continueSession = true;
-
-            const currentState = {
-                sessionID,
-                userID,
-                level: 3,
-                msisdn,
-                message,
-                userData,
-                network,
-                newSession,
-                page: 2
-            };
-
-            userResponseTracker.push({ ...currentState });
-            cache.put(sessionID, userResponseTracker);
-
-        }       else{
-       
-        message = "Enter the town of the Soul";
-
-        continueSession = true;
-
-        const currentState = {
-            sessionID,
-            userID,
-            level: 4,
-            msisdn,
-            message,
-            userData,
-            network,
-            newSession,
-            page: 2
-        };
-
-        userResponseTracker.push({ ...currentState });
-        cache.put(sessionID, userResponseTracker);
-
+menu.state('contact.town', {
+    run: function(){
+        let contact = menu.val;
+       menu.session.set('contact', contact);
+        menu.con('Enter the  town of the Soul');
+    },
+    next: {
+        '*[a-zA-Z]+': 'town.finish'
     }
-}  
+});
+
+
+menu.state('town.finish', {
+    run: async () =>{
+        let town = menu.val;
+        let dataToSave = {}
+        dataToSave.town = town
+        menu.session.set('town', town);
+       
+        menu.session.get('name',(err, value)=>{
+          dataToSave.name = value;
+       })
+      menu.session.get('gender',  (err, value)=>{
+        dataToSave.gender = value;
+     })
+    menu.session.get('contact', (err, value)=>{
+        dataToSave.contact = value;
+     })
+
+
      
-else if (lastResponse.level === 4) {
-    // let mytown =  userData
-    // dataToSave.town  = mytown
 
-    // const data = new Souls({
-    //     name: dataToSave.name,
-    //     gender: dataToSave.gender,
-    //     contact: dataToSave.contact,
-    //     town: dataToSave.town
-    //     });
+       console.log(moment().format("MMM Do YY"));
+     const data = new Souls({
+        name: dataToSave.name,
+        gender: dataToSave.gender,
+        contact: dataToSave.contact,
+        town: dataToSave.town,
+        date: moment().format("MMM Do YY")
+        });
 
-    //    await  data.save();
-    console.log("last data")
-    console.log(userData)
-    message = "Soul successufully registered";
-
-    continueSession = false;
-
-    res.setHeader('Content-Type', 'application/json');
-    return res.status(200).json({
-        userID,
-        sessionID,
-        message,
-        continueSession,
-        msisdn
-    });
-
-
-}  
-
-
-console.log("userimputer",    userData);
+       const savedData =  await data.save() ;
+    
+        menu.end('Registeration Succefull');
+    },
    
+});
 
-    res.setHeader('Content-Type', 'application/json');
-    return res.status(200).json({
-        userID,
-        sessionID,
-        message,
-        continueSession,
-        msisdn
+menu.end
+
+app.post('/ussd', (req, res) => {
+    menu.run(req.body, resMsg => {
+        // resMsg would return an object like:
+        // { "continueSession": "true", "message": "Some Response",  }
+        res.json(resMsg);
     });
-}));
-
-
+})
 
 
 app.listen(3000, () => {
@@ -267,7 +163,6 @@ console.log("Database connected...");
 });
     console.log(`Server is running on port `);
 });
-
 
 
 
