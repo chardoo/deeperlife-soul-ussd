@@ -16,6 +16,12 @@ const dataSchema = new mongoose.Schema({
         required: true,
         type: String
     },
+    date: {
+        required: false,
+        type: String
+    },
+
+
 });
 const Souls = mongoose.model("souls", dataSchema);
 
