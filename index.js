@@ -123,13 +123,12 @@ menu.state("town.finish", {
       dataToSave.contact = value;
     });
 
-    console.log(moment().format("MMM Do YY"));
     const data = new Souls({
       name: dataToSave.name,
       gender: dataToSave.gender,
       contact: dataToSave.contact,
       town: dataToSave.town,
-      date: moment().format("MMM Do YY"),
+      date: Date.now(),
     });
 
     const savedData = await data.save();
