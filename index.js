@@ -111,7 +111,7 @@ menu.state("ageGroup.contact", {
     }
 
 
-    menu.con("Enter the phone number:");
+    menu.con("Enter the phone number0:");
   },
   next: {
     "\d{10}":
