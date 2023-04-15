@@ -111,10 +111,10 @@ menu.state("ageGroup.contact", {
     }
 
 
-    menu.con("Enter the phone number0:");
+    menu.con("Enter the phone number:");
   },
   next: {
-    "\d{10}":
+    "*\d{10}":
       "contact.town",
   },
 });
