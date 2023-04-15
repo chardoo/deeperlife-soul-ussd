@@ -73,8 +73,8 @@ menu.state("gender", {
     menu.con("Choose the gender:" + "\n1. Male" + "\n2. Female");
   },
   next: {
-    1: "gender.age",
-    2: "gender.age",
+    "1": "gender.age",
+    "2": "gender.age",
   },
 });
 
@@ -93,9 +93,9 @@ menu.state("gender.age", {
     );
   },
   next: {
-    1: "ageGroup.contact",
-    2: "ageGroup.contact",
-    3: "ageGroup.contact",
+    "1": "ageGroup.contact",
+    "2": "ageGroup.contact",
+    "3": "ageGroup.contact",
   }
 })
 
@@ -156,6 +156,7 @@ menu.state("town.finish", {
       ageGroup: dataToSave.ageGroup,
       contact: dataToSave.contact,
       town: dataToSave.town,
+      district: "",
       date: Date.now(),
     });
 
