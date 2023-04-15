@@ -56,8 +56,8 @@ menu.startState({
   run: () => {
     // use menu.con() to send response without terminating session
     menu.con(
-      "Welcome to Global Crusade Soul Registration App" +
-        "\n Enter the  Name of the Soul"
+      "Welcome to the convert registration portal for Global Crusade with Kumuyi" +
+        "\nEnter the name of the individual:"
     );
   },
   // next object links to next state based on user input
@@ -70,24 +70,48 @@ menu.state("gender", {
   run: function () {
     let name = menu.val;
     menu.session.set("name", name);
-    menu.con("Choosethe Gender of the Soul" + "\n1. Male" + "\n2. Female");
+    menu.con("Choose the gender:" + "\n1. Male" + "\n2. Female");
   },
   next: {
-    1: "gender.contact",
-    2: "gender.contact",
+    1: "gender.age",
+    2: "gender.age",
   },
 });
 
-menu.state("gender.contact", {
+menu.state("gender.age", {
   run: function () {
     let gender = menu.val;
     if (gender == "1") {
       menu.session.set("gender", "Male");
-    } else {
+    } else if (gender == "2") {
       menu.session.set("gender", "Female");
     }
 
-    menu.con("Enter the  contact of the Soul");
+    menu.con(
+      "Choose the age group of the individual:" +
+        "\n1. Adult" + "\n2. Youth" + "\3. Child"
+    );
+  },
+  next: {
+    1: "ageGroup.contact",
+    2: "ageGroup.contact",
+    3: "ageGroup.contact",
+  }
+})
+
+menu.state("ageGroup.contact", {
+  run: function () {
+    let ageGroup = menu.val;
+    if (ageGroup == "1") {
+      menu.session.set("ageGroup", "Adult");
+    } else if (ageGroup == "2") {
+      menu.session.set("ageGroup", "Youth");
+    } else {
+      menu.session.set("ageGroup", "Child");
+    }
+
+
+    menu.con("Enter the phone number:");
   },
   next: {
     "*[(]{0,1}[0-9]{3}[)]{0,1}[-s.]{0,1}[0-9]{3}[-s.]{0,1}[0-9]{4}":
@@ -99,7 +123,7 @@ menu.state("contact.town", {
   run: function () {
     let contact = menu.val;
     menu.session.set("contact", contact);
-    menu.con("Enter the  town of the Soul");
+    menu.con("Enter the location of the individual:");
   },
   next: {
     "*[a-zA-Z]+": "town.finish",
@@ -122,10 +146,14 @@ menu.state("town.finish", {
     menu.session.get("contact", (err, value) => {
       dataToSave.contact = value;
     });
+    menu.session.get("ageGroup", (err, value) => {
+      dataToSave.ageGroup = value;
+    })
 
     const data = new Souls({
       name: dataToSave.name,
       gender: dataToSave.gender,
+      ageGroup: dataToSave.ageGroup,
       contact: dataToSave.contact,
       town: dataToSave.town,
       date: Date.now(),
@@ -133,7 +161,7 @@ menu.state("town.finish", {
 
     const savedData = await data.save();
 
-    menu.end("Registeration Succefull");
+    menu.end("Successfuly registered the individual.\nThank you!");
   },
 });
 

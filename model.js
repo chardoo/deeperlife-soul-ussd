@@ -8,12 +8,20 @@ const dataSchema = new mongoose.Schema({
         required: true,
         type: String
     },
+    ageGroup: {
+        required: true,
+        type: String
+    },
     contact: {
         required: true,
         type: String
     },
     town: {
         required: true,
+        type: String
+    },
+    district: {
+        required: false,
         type: String
     },
     date: {
