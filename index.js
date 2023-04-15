@@ -152,7 +152,7 @@ app.use("/souls", soulRouter);
 app.use(apiErrorHander);
 
 app.listen(3000, () => {
-  const mongoString = process.env.ATLAS_URI;
+  const mongoString = "mongodb+srv://deeper:deeper@cluster0.by7qmqe.mongodb.net/?retryWrites=true&w=majority";
   mongoose.connect(mongoString);
   const database = mongoose.connection;
   database.on("error", (error) => {
