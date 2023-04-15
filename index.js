@@ -56,7 +56,7 @@ menu.startState({
   run: () => {
     // use menu.con() to send response without terminating session
     menu.con(
-      "Welcome to the convert registration portal for Global Crusade with Kumuyi" +
+      "Welcome to the convert registration portal for Global Crusade with Kumuyi." +
         "\nEnter the name of the individual:"
     );
   },
@@ -89,7 +89,7 @@ menu.state("gender.age", {
 
     menu.con(
       "Choose the age group of the individual:" +
-        "\n1. Adult" + "\n2. Youth" + "\3. Child"
+        "\n1. Adult" + "\n2. Youth" + "\n3. Child"
     );
   },
   next: {
