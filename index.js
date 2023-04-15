@@ -114,7 +114,7 @@ menu.state("ageGroup.contact", {
     menu.con("Enter the phone number:");
   },
   next: {
-    "0\d{9}":
+    "\d{10}":
       "contact.town",
   },
 });
