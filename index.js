@@ -194,9 +194,30 @@ menu.state("town.finish", {
 
     const savedData = await data.save();
 
-    menu.end("Successfuly registered the individual.\nThank you!");
+    menu.con("Registeration was successful." +
+              "\n\nDo you want to register another person?" +
+              "\n1 Yes" + "\n2 No");
+
+    // menu.end("Successfuly registered the individual.\nThank you!");
+  },
+  next: {
+    "1": "restart",
+    "2": "closeSession",
   },
 });
+
+menu.state("restart", {
+  run: function () {
+    menu.goStart();
+  },
+});
+
+menu.state("closeSession", {
+  run: function () {
+    menu.end("Thank you!");
+  },
+});
+
 
 menu.end;
 
