@@ -110,10 +110,10 @@ menu.state("ageGroup.contact", {
       menu.session.set("ageGroup", "Child");
     }
 
-    menu.con("Enter the phone number:");
+    menu.con("Enter the phone number0:");
   },
   next: {
-    "*\\d{10}$":
+    "*^\\d{10}$":
     // "*[(]{0,1}[0-9]{3}[)]{0,1}[-s.]{0,1}[0-9]{3}[-s.]{0,1}[0-9]{4}$":
       "contact.town",
   },
