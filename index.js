@@ -70,13 +70,11 @@ menu.state("gender", {
   run: function () {
     let name = menu.val;
     menu.session.set("name", name);
-    menu.con("Choose the gender:" + "\n1 Male" + "\n2 Female" +
-              "\n# Go back to previous menu");
+    menu.con("Choose the gender:" + "\n1 Male" + "\n2 Female");
   },
   next: {
     "1": "gender.age",
     "2": "gender.age",
-    "#": menu.goStart
   },
 });
 
@@ -91,13 +89,15 @@ menu.state("gender.age", {
 
     menu.con(
       "Choose the age group of the individual:" +
-        "\n1. Adult" + "\n2. Youth" + "\n3. Child"
+        "\n1 Adult" + "\n2 Youth" + "\n3 Child" +
+        "\n# Go back to previous menu"
     );
   },
   next: {
     "1": "ageGroup.contact",
     "2": "ageGroup.contact",
     "3": "ageGroup.contact",
+    "#": "gender"
   }
 })
 
