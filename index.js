@@ -76,7 +76,7 @@ menu.state("gender", {
   next: {
     "1": "gender.age",
     "2": "gender.age",
-    "#": menu.goStart()
+    // "#": menu.goStart()
   },
 });
 
@@ -112,7 +112,7 @@ menu.state("ageGroup.contact", {
       menu.session.set("ageGroup", "Child");
     }
 
-    menu.con("Enter the phone number:");
+    menu.con("Enter the phone number0:");
   },
   next: {
     "*^0\\d{9}$": "contact.town",
