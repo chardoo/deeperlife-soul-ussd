@@ -207,8 +207,11 @@ menu.state("town.finish", {
 });
 
 menu.state("restart", {
-  run: function () {
-    menu.goStart();
+  // run: function () {
+  //   menu.goStart();
+  // },
+  next: {
+    "": "home",
   },
 });
 
