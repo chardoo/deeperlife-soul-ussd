@@ -76,7 +76,7 @@ menu.state("gender", {
   next: {
     "1": "gender.age",
     "2": "gender.age",
-    // "#": menu.goStart()
+    "#": menu.goStart
   },
 });
 
