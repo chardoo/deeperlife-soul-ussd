@@ -26,7 +26,7 @@ const dataSchema = new mongoose.Schema({
     },
     date: {
         required: false,
-        type: String
+        type: Date
     },
 
 

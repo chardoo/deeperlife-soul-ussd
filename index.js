@@ -189,7 +189,7 @@ menu.state("town.finish", {
       contact: dataToSave.contact,
       town: dataToSave.town,
       district: "",
-      date: moment().format("MMM Do YY"),
+      date: new Date(),
     });
 
     const savedData = await data.save();
@@ -197,23 +197,12 @@ menu.state("town.finish", {
     menu.con("Registeration was successful." +
               "\n\nDo you want to register another person?" +
               "\n1 Yes" + "\n2 No");
-
-    // menu.end("Successfuly registered the individual.\nThank you!");
   },
   next: {
     "1": "home",
     "2": "closeSession",
   },
 });
-
-// menu.state("restart", {
-//   // run: function () {
-//   //   menu.goStart();
-//   // },
-//   next: {
-//     "": "home",
-//   },
-// });
 
 menu.state("closeSession", {
   run: function () {

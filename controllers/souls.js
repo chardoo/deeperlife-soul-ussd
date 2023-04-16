@@ -1,3 +1,4 @@
+const moment = require("moment");
 const Souls = require("../model.js");
 const ApiError = require("../errors/ApiError.js");
 
@@ -37,6 +38,8 @@ function getSummary(souls){
 const getSouls = async (_req, res, next) => {
   try {
     const souls = await Souls.find();
+    const summary = getSummary(souls);
+
     const metadata = {
       result_set: {
         count: souls.length,
@@ -46,7 +49,11 @@ const getSouls = async (_req, res, next) => {
 
     res
       .status(200)
-      .json({ status: "successs", data: souls, totalSouls: metadata });
+      .json({
+        status: "successs",
+        data: souls,
+        summary: summary,
+        metadata });
   } catch (error) {
     return next(ApiError.BadRequest(error));
   }
@@ -56,7 +63,41 @@ const getSoulsByDate = async (req, res) => {
   try {
     const date = req.params.date;
 
-    const souls = await Souls.find({ date: date }).sort({ date: 1 });
+    const souls = await Souls.find({
+      date: {
+        $gte: moment(date).startOf('day').toDate(),
+        $lte: moment(date).endOf('day').toDate()
+      }
+    }).sort({ date: 1 });
+    const summary = getSummary(souls);
+
+    const metadata = {
+      result_set: {
+        count: souls.length,
+        total: souls.length,
+      },
+    };
+    res.status(200).json({ 
+      status: "successs",
+      data: souls, 
+      summary: summary,
+      metadata });
+  } catch (error) {
+    return next(ApiError.BadRequest(error));
+  }
+};
+
+const getSoulsByDateRange = async (req, res) => {
+  try {
+    const dateBegin = req.params.date_begin;
+    const dateEnd = req.params.date_end;
+
+    const souls = await Souls.find({
+      date: {
+        $gte: moment(dateBegin).startOf('day').toDate(),
+        $lte: moment(dateEnd).endOf('day').toDate()
+      }
+    }).sort({ date: 1 });
     const summary = getSummary(souls);
 
     const metadata = {
@@ -134,6 +175,7 @@ const getDailySummary = async (req, res) => {
 module.exports = {
   getSouls,
   getSoulsByDate,
+  getSoulsByDateRange,
   getSoulsBytown,
   getDailySummary,
 };
