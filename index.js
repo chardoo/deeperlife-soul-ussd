@@ -157,7 +157,7 @@ menu.state("town.finish", {
       contact: dataToSave.contact,
       town: dataToSave.town,
       district: "",
-      date: Date.now(),
+      date: moment().format("MMM Do YY"),
     });
 
     const savedData = await data.save();
