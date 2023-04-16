@@ -19,7 +19,7 @@ function getSummary(souls){
     children: {male: 0, female: 0}
   }
 
-  for (let soul in souls) {
+  for (const soul of souls) {
     if (soul.ageGroup == "Adult"){
       summary.adult = updateCount(summary.adult, soul.gender);
     }
