@@ -67,8 +67,55 @@ const getSoulsBytown = async (req, res) => {
     return next(ApiError.BadRequest(error));
   }
 };
+
+function updateCount(countDict, gender){
+  if (gender == "Male"){
+    countDict.male += 1;
+  }
+  else if (gender == "Female"){
+    countDict.female += 1;
+  } 
+  return countDict;
+}
+
+const getDailySummary = async (req, res) => {
+  try {
+    const date = req.params.date;
+
+    const souls = await Souls.find({ date: date });
+
+    var summary = {
+      adult: {male: 0, female: 0},
+      youth: {male: 0, female: 0},
+      children: {male: 0, female: 0}
+    }
+    for (let soul in souls) {
+      if (soul.ageGroup == "Adult"){
+        summary.adult = updateCount(summary.adult, soul.gender);
+      }
+      else if (soul.ageGroup == "Youth"){
+        summary.youth = updateCount(summary.youth, soul.gender);
+      }
+      else if (soul.ageGroup == "Child"){
+        summary.children = updateCount(summary.children, soul.gender);
+      }
+    }
+
+    const metadata = {
+      result_set: {
+        count: souls.length,
+        total: souls.length,
+      },
+    };
+    res.status(200).json({ status: "successs", data: summary, metadata });
+  } catch (error) {
+    return next(ApiError.BadRequest(error));
+  }
+}
+
 module.exports = {
   getSouls,
   getSoulsByDate,
   getSoulsBytown,
+  getDailySummary,
 };
