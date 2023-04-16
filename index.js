@@ -195,6 +195,7 @@ menu.state("town.finish", {
 
     const savedData = await data.save();
 
+    console.log(savedData)
     if (savedData) {
       // send SMS
       console.log("Sending text message.")
