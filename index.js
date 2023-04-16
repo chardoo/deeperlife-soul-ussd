@@ -66,15 +66,29 @@ menu.startState({
   },
 });
 
+menu.state("home", {
+  run: function() {
+    menu.con(
+      "Welcome to the convert registration portal for Global Crusade with Kumuyi." +
+        "\nEnter the name of the individual:"
+    );
+  },
+  next: {
+    "*[a-zA-Z]+": "gender",
+  },
+});
+
 menu.state("gender", {
   run: function () {
     let name = menu.val;
     menu.session.set("name", name);
-    menu.con("Choose the gender:" + "\n1 Male" + "\n2 Female");
+    menu.con("Choose the gender:" + "\n1 Male" + "\n2 Female" +
+              "\n\n# Go back to previous menu");
   },
   next: {
     "1": "gender.age",
     "2": "gender.age",
+    "#": "home"
   },
 });
 
@@ -90,7 +104,7 @@ menu.state("gender.age", {
     menu.con(
       "Choose the age group of the individual:" +
         "\n1 Adult" + "\n2 Youth" + "\n3 Child" +
-        "\n# Go back to previous menu"
+        "\n\n# Go back to previous menu"
     );
   },
   next: {
@@ -112,10 +126,12 @@ menu.state("ageGroup.contact", {
       menu.session.set("ageGroup", "Child");
     }
 
-    menu.con("Enter the phone number:");
+    menu.con("Enter the phone number:" +
+              "\n\n# Go back to previous menu");
   },
   next: {
     "*^0\\d{9}$": "contact.town",
+    "#": "gender.age"
   },
 });
 
@@ -123,10 +139,12 @@ menu.state("contact.town", {
   run: function () {
     let contact = menu.val;
     menu.session.set("contact", contact);
-    menu.con("Enter the location of the individual:");
+    menu.con("Enter the location of the individual:" +
+              "\n\n# Go back to previous menu");
   },
   next: {
     "*[a-zA-Z]+": "town.finish",
+    "#": "ageGroup.contact"
   },
 });
 
