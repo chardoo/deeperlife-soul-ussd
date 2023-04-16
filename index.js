@@ -70,11 +70,13 @@ menu.state("gender", {
   run: function () {
     let name = menu.val;
     menu.session.set("name", name);
-    menu.con("Choose the gender:" + "\n1. Male" + "\n2. Female");
+    menu.con("Choose the gender:" + "\n1 Male" + "\n2 Female" +
+              "\n# Go back to previous menu");
   },
   next: {
     "1": "gender.age",
     "2": "gender.age",
+    "#": menu.goStart()
   },
 });
 
