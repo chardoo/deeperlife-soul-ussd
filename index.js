@@ -195,34 +195,60 @@ menu.state("town.finish", {
 
     const savedData = await data.save();
 
-    console.log(savedData)
-    if (savedData) {
-      // send SMS
-      console.log("Sending text message.")
-      const data = {
-        "sender": "GCK",
-        "message": "Hello " + dataToSave.name + ", \nCongratulations and welcome to the family of God.",
-        "recipients": [dataToSave.contact, ]
-      };
+    console.log("**********");
+    console.log("send text message");
+    console.log(savedData);
+    console.log("********************");
 
-      const config = {
-        method: 'post',
-        url: 'https://sms.arkesel.com/api/v2/sms/send',
-        headers: {
-          'api-key': 'OmF3NGw3dmdya1hiMHFCV2Q='
-        },
-        data : data
-      };
+    const smsData = {
+      "sender": "GCK",
+      "message": "Hello " + dataToSave.name + ", \nCongratulations and welcome to the family of God.",
+      "recipients": [dataToSave.contact, ]
+    };
 
-      axios(config).then(
-        function (response) {
-          console.log(JSON.stringify(response.data));
-      }).catch(function (error) {
-        console.log(error);
-      });
-    } else {
-      console.log("Could not send text message because data was not saved.")
-    }
+    const config = {
+      method: 'post',
+      url: 'https://sms.arkesel.com/api/v2/sms/send',
+      headers: {
+        'api-key': 'OmF3NGw3dmdya1hiMHFCV2Q='
+      },
+      data : smsData
+    };
+
+    axios(config).then(
+      function (response) {
+        console.log(JSON.stringify(response.data));
+    }).catch(function (error) {
+      console.log(error);
+    });
+
+    // if (savedData) {
+    //   // send SMS
+    //   console.log("Sending text message.")
+    //   const data = {
+    //     "sender": "GCK",
+    //     "message": "Hello " + dataToSave.name + ", \nCongratulations and welcome to the family of God.",
+    //     "recipients": [dataToSave.contact, ]
+    //   };
+
+    //   const config = {
+    //     method: 'post',
+    //     url: 'https://sms.arkesel.com/api/v2/sms/send',
+    //     headers: {
+    //       'api-key': 'OmF3NGw3dmdya1hiMHFCV2Q='
+    //     },
+    //     data : data
+    //   };
+
+    //   axios(config).then(
+    //     function (response) {
+    //       console.log(JSON.stringify(response.data));
+    //   }).catch(function (error) {
+    //     console.log(error);
+    //   });
+    // } else {
+    //   console.log("Could not send text message because data was not saved.")
+    // }
 
     menu.con("Registeration was successful." +
               "\n\nDo you want to register another person?" +
