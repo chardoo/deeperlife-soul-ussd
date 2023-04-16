@@ -143,6 +143,20 @@ menu.state("contact.town", {
               "\n\n# Go back to previous menu");
   },
   next: {
+    "User timeout": "town.invalid",
+    "*[a-zA-Z]+": "town.finish",
+    "#": "ageGroup.contact"
+  },
+});
+
+menu.state("town.invalid", {
+  run: function () {
+    menu.con("Invalid input" +
+              "\nEnter the location of the individual:" +
+              "\n\n# Go back to previous menu");
+  },
+  next: {
+    "User timeout": "contact.town",
     "*[a-zA-Z]+": "town.finish",
     "#": "ageGroup.contact"
   },
