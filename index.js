@@ -112,7 +112,7 @@ menu.state("ageGroup.contact", {
       menu.session.set("ageGroup", "Child");
     }
 
-    menu.con("Enter the phone number0:");
+    menu.con("Enter the phone number:");
   },
   next: {
     "*^0\\d{9}$": "contact.town",
