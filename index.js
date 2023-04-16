@@ -201,19 +201,19 @@ menu.state("town.finish", {
     // menu.end("Successfuly registered the individual.\nThank you!");
   },
   next: {
-    "1": "restart",
+    "1": "home",
     "2": "closeSession",
   },
 });
 
-menu.state("restart", {
-  // run: function () {
-  //   menu.goStart();
-  // },
-  next: {
-    "": "home",
-  },
-});
+// menu.state("restart", {
+//   // run: function () {
+//   //   menu.goStart();
+//   // },
+//   next: {
+//     "": "home",
+//   },
+// });
 
 menu.state("closeSession", {
   run: function () {
